@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Function to create a directory
+create_dir() {
+    mkdir "$1"
+    echo "Directory '$1' created."
+}
+
+# Function to delete a directory
+delete_dir() {
+    rm -r "$1"
+    echo "Directory '$1' deleted."
+}
+
+# Function to create a file
+create_file() {
+    touch "$1"
+    echo "File '$1' created."
+}
+
+# Function to delete a file
+delete_file() {
+    rm "$1"
+    echo "File '$1' deleted."
+}
+
+# Function to rename a directory
+rename_dir() {
+    mv "$1" "$2"
+    echo "Directory renamed from '$1' to '$2'."
+}
+
+# Function to rename a file
+rename_file() {
+    mv "$1" "$2"
+    echo "File renamed from '$1' to '$2'."
+}
+
+# Check for at least 2 arguments
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 {create|delete|rename} {type} {name} [new_name]"
+    echo "type: dir or file"
+    echo "For rename, provide the new_name as the fourth argument."
+    exit 1
+fi
+
+# Read the command-line arguments
+action=$1
+type=$2
+name=$3
+new_name=$4
+
+# Perform the action based on user input
+case $action in
+    create)
+        if [ "$type" == "dir" ]; then
+            create_dir "$name"
+        elif [ "$type" == "file" ]; then
+            create_file "$name"
+        else
+            echo "Invalid type: $type. Use 'dir' or 'file'."
+            exit 1
+        fi
+        ;;
+    delete)
+        if [ "$type" == "dir" ]; then
+            delete_dir "$name"
+        elif [ "$type" == "file" ]; then
+            delete_file "$name"
+        else
+            echo "Invalid type: $type. Use 'dir' or 'file'."
+            exit 1
+        fi
+        ;;
+    rename)
+        if [ -z "$new_name" ]; then
+            echo "For rename action, provide the new name."
+            exit 1
+        fi
+        if [ "$type" == "dir" ]; then
+            rename_dir "$name" "$new_name"
+        elif [ "$type" == "file" ]; then
+            rename_file "$name" "$new_name"
+        else
+            echo "Invalid type: $type. Use 'dir' or 'file'."
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Invalid action: $action. Use 'create', 'delete', or 'rename'."
+        exit 1
+        ;;
+esac
